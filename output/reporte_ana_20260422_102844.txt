@@ -1,0 +1,26 @@
+======================================================================
+  REPORTE ANALITICO - MODULO ANA EVERGREEN
+  Fecha: 2026-04-22 10:28:44
+======================================================================
+
+**RESUMEN EJECUTIVO**
+El análisis de los cultivos en el departamento de Antioquia muestra una tendencia general mixta. Los rendimientos promedio de hortalizas, tubérculos y plátanos, y frutales son destacados, aunque se detectó una alerta por el bajo rendimiento de las plantas aromáticas, condimentarias y medicinales. Se presentan recomendaciones concretas para mejorar la producción y el manejo de estos cultivos.
+
+**HALLAZGOS CLAVE**
+
+1. **Hortalizas**: El rendimiento promedio es de 27.36 ton/ha, con una tendencia de producción estable. El número de municipios productores es de 1. Comparado con los estándares del manual técnico, el rendimiento actual es cercano al óptimo, lo que sugiere un manejo adecuado de este cultivo.
+2. **Tubérculos y plátanos**: El rendimiento promedio es de 37.4 ton/ha, aunque solo se cuenta con información de 1 municipio productor. La falta de variabilidad en el rendimiento sugiere una posible homogeneidad en las condiciones de cultivo.
+3. **Frutales**: El rendimiento promedio es de 7.81 ton/ha, con una tendencia de producción estable y 88 municipios productores. La amplia distribución de este cultivo sugiere una gran diversidad en las condiciones de cultivo y un potencial para mejorar la producción en algunos municipios.
+4. **Plantas aromáticas, condimentarias y medicinales**: El rendimiento promedio es de 0.5 ton/ha, lo que es significativamente bajo. Solo se cuenta con información de 1 municipio productor, lo que limita la interpretación de estos resultados.
+
+**ALERTAS DE PRODUCCIÓN**
+Se detectó una alerta por el bajo rendimiento de las plantas aromáticas, condimentarias y medicinales. Esto puede deberse a factores como la falta de tecnificación en el cultivo, la insuficiente atención al suelo y la ausencia de prácticas de manejo adecuadas. Es importante investigar las causas específicas de este bajo rendimiento para tomar medidas correctivas.
+
+**RECOMENDACIONES**
+
+1. **Mejorar la tecnificación en el cultivo de plantas aromáticas, condimentarias y medicinales**: Implementar prácticas de manejo adecuadas, como la selección de variedades adecuadas, el control de plagas y enfermedades, y la fertilización óptima, puede ayudar a mejorar el rendimiento de este cultivo.
+2. **Diversificar la producción de frutales**: La amplia distribución de este cultivo sugiere un potencial para mejorar la producción en algunos municipios. La diversificación de la producción puede ayudar a reducir la dependencia de un solo cultivo y mejorar la resiliencia del sistema agrícola.
+3. **Monitorear y evaluar la producción de tubérculos y plátanos**: La falta de variabilidad en el rendimiento de este cultivo sugiere una posible homogeneidad en las condiciones de cultivo. Es importante monitorear y evaluar la producción para identificar oportunidades de mejora y optimizar el manejo de este cultivo.
+4. **Fomentar la cooperación entre productores y técnicos**: La cooperación entre productores y técnicos puede ayudar a mejorar la producción y el manejo de los cultivos. La capacitación y el asesoramiento técnico pueden ser clave para mejorar la productividad y la competitividad del sector agrícola.
+
+En resumen, el análisis de los cultivos en el departamento de Antioquia muestra una tendencia general mixta, con oportunidades de mejora en la producción de plantas aromáticas, condimentarias y medicinales. La implementación de prácticas de manejo adecuadas, la diversificación de la producción y la cooperación entre productores y técnicos pueden ayudar a mejorar la productividad y la competitividad del sector agrícola.
