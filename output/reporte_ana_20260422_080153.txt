@@ -1,0 +1,46 @@
+======================================================================
+  REPORTE ANALÍTICO - MÓDULO ANA EVERGREEN
+  Generado por RAG con Claude (Anthropic)
+  Fecha: 2026-04-22 08:01:53
+======================================================================
+
+
+## RESUMEN EJECUTIVO
+
+El análisis de las Evaluaciones Agropecuarias Municipales (EVA) para el departamento 
+de Antioquia revela un panorama mixto en la producción agrícola. El café mantiene 
+rendimientos cercanos al óptimo pero con tendencia ligeramente decreciente, mientras 
+que el maíz muestra una caída significativa que requiere atención inmediata.
+
+## HALLAZGOS CLAVE
+
+**Café:** El rendimiento promedio de 1.83 ton/ha se encuentra dentro del rango óptimo 
+(1.8-2.2 ton/ha según el manual técnico), pero la tendencia decreciente del -3.1% 
+sugiere un deterioro progresivo que podría relacionarse con la edad de los cafetales 
+o la presencia de roya.
+
+**Maíz:** El rendimiento de 4.0 ton/ha está en el límite inferior del rango óptimo 
+para maíz tecnificado (4.0-6.5 ton/ha). La tendencia decreciente del -6.9% es 
+preocupante y podría indicar problemas de fertilidad del suelo o presión del 
+gusano cogollero.
+
+## ALERTAS DE PRODUCCIÓN
+
+⚠ El maíz presenta una caída del 6.9% en producción, superando el umbral de alerta 
+del 5%. Se recomienda investigar las causas en los municipios de Fredonia y Salgar.
+
+## RECOMENDACIONES
+
+1. **Café:** Implementar un programa de renovación de cafetales mayores a 6 años 
+   y reforzar el monitoreo de roya, especialmente antes de la cosecha principal 
+   (octubre-diciembre).
+
+2. **Maíz:** Realizar análisis de suelos en las zonas con mayor caída de rendimiento 
+   y considerar rotación de cultivos para restaurar la fertilidad.
+
+3. **General:** Establecer un sistema de alertas tempranas basado en los umbrales 
+   del manual técnico para detectar caídas de rendimiento antes de que se agraven.
+
+---
+[NOTA: Este es un reporte de demostración. Con una API key válida de Anthropic, 
+el LLM genera reportes contextualizados con los datos reales del análisis.]

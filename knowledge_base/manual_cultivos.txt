@@ -1,0 +1,61 @@
+== MANUAL TÉCNICO DE REFERENCIA - CULTIVOS COLOMBIANOS ==
+Fuente: Adaptado de Minagricultura, Agrosavia y Agronet
+
+--- CAFÉ ---
+- Rendimiento óptimo en Colombia: 1.8 - 2.2 ton/ha (café pergamino seco)
+- Rendimiento por debajo de 1.4 ton/ha indica problemas de fertilización, plagas o edad del cultivo
+- Principales zonas productoras: Antioquia, Huila, Tolima, Caldas, Nariño
+- Ciclo de producción: cultivo permanente, cosecha principal octubre-diciembre
+- Cosecha de mitaca (traviesa): abril-junio
+- Plagas principales: broca del café (Hypothenemus hampei), roya (Hemileia vastatrix)
+- Fertilización recomendada: 3-4 aplicaciones anuales de NPK según análisis de suelo
+- Renovación recomendada cada 5-6 años por zoca o siembra
+
+--- MAÍZ ---
+- Rendimiento óptimo en Colombia: 4.0 - 6.5 ton/ha (maíz tecnificado)
+- Rendimiento promedio maíz tradicional: 1.5 - 2.5 ton/ha
+- Rendimiento por debajo de 3.0 ton/ha en tecnificado indica problemas
+- Ciclo: cultivo transitorio, 120-150 días según variedad
+- Temporadas de siembra: primer semestre (marzo-abril), segundo semestre (agosto-septiembre)
+- Principales departamentos: Córdoba, Meta, Tolima, Valle del Cauca, Antioquia
+- Plagas: gusano cogollero (Spodoptera frugiperda), barrenador del tallo
+- Requerimientos hídricos: 500-800 mm durante el ciclo
+
+--- PAPA ---
+- Rendimiento óptimo: 20 - 30 ton/ha
+- Rendimiento por debajo de 15 ton/ha es bajo para cultivo tecnificado
+- Principales zonas: Boyacá, Cundinamarca, Nariño, Antioquia
+- Ciclo: 120-150 días, cultivo de clima frío (2500-3500 msnm)
+- Plagas: polilla guatemalteca (Tecia solanivora), gota (Phytophthora infestans)
+
+--- ARROZ ---
+- Rendimiento óptimo arroz riego: 6.0 - 8.0 ton/ha
+- Rendimiento óptimo arroz secano: 4.0 - 5.5 ton/ha
+- Principales zonas: Tolima, Meta, Casanare, Huila
+- Ciclo: 120-140 días
+
+--- CAÑA DE AZÚCAR ---
+- Rendimiento óptimo: 120 - 150 ton/ha (caña)
+- Principales zonas: Valle del Cauca, Cauca
+- Ciclo: 12-14 meses primera cosecha, 10-12 meses socas
+
+== ESTÁNDARES DE REPORTE AGRÍCOLA ==
+
+Un reporte analítico agrícola debe incluir:
+1. Resumen ejecutivo: no más de 100 palabras, con los hallazgos principales
+2. Contexto: departamento, cultivos analizados, período
+3. Hallazgos clave: métricas principales con interpretación
+4. Comparación con estándares: rendimiento real vs óptimo
+5. Alertas: cultivos o zonas con rendimiento por debajo del umbral
+6. Recomendaciones: acciones concretas basadas en los hallazgos
+7. El reporte debe ser comprensible para un agricultor o gerente sin formación técnica en datos
+
+== GLOSARIO ==
+
+- Rendimiento (ton/ha): producción total dividida por área cosechada
+- Área sembrada: hectáreas en las que se estableció el cultivo
+- Área cosechada: hectáreas de las que efectivamente se obtuvo producción
+- EVA: Evaluaciones Agropecuarias Municipales (Minagricultura)
+- Cultivo transitorio: se siembra y cosecha en un mismo año (maíz, arroz, papa)
+- Cultivo permanente: se cosecha múltiples veces sin re-siembra (café, cacao, palma)
+- SIPSA: Sistema de Información de Precios del Sector Agropecuario (DANE)

@@ -1,0 +1,36 @@
+======================================================================
+  REPORTE ANALITICO - MODULO ANA EVERGREEN
+  Fecha: 2026-04-22 09:28:46
+======================================================================
+
+## RESUMEN EJECUTIVO
+ 
+El analisis de las Evaluaciones Agropecuarias Municipales (EVA) para el departamento de Antioquia revela un panorama mixto en la produccion agricola. Se identificaron cultivos con rendimientos cercanos al optimo y otros con tendencias decrecientes que requieren atencion inmediata.
+ 
+## HALLAZGOS CLAVE
+ 
+**Hortalizas:** Presentan rendimientos variables segun el municipio y la variedad cultivada. Los municipios del oriente antioqueno muestran los mejores indicadores de productividad.
+ 
+**Tuberculos y platanos:** El rendimiento se mantiene estable en la mayoria de municipios analizados, con produccion concentrada en zonas de clima templado y frio.
+ 
+**Plantas aromaticas:** Con un rendimiento promedio de 0.5 ton/ha, este grupo muestra los valores mas bajos del analisis. Sin embargo, esto es esperable dado el tipo de cultivo y su alto valor por kilogramo.
+ 
+**Frutales:** Tendencia mixta con algunos municipios mostrando crecimiento sostenido y otros con caidas asociadas a factores climaticos.
+ 
+## ALERTAS DE PRODUCCION
+ 
+- Las plantas aromaticas, condimentarias y medicinales presentan rendimiento bajo (0.5 ton/ha), aunque esto puede ser normal dado su alto valor comercial.
+- Se detectaron municipios con caida sostenida de produccion en los ultimos 3 periodos.
+ 
+## RECOMENDACIONES
+ 
+1. **Plantas aromaticas:** Evaluar si el rendimiento reportado corresponde al estandar del cultivo o si hay oportunidades de mejora en practicas de cosecha y postcosecha.
+ 
+2. **Hortalizas:** Fortalecer la asistencia tecnica en municipios con rendimientos por debajo del promedio departamental.
+ 
+3. **General:** Implementar un sistema de monitoreo continuo basado en los umbrales del manual tecnico para detectar caidas de rendimiento tempranamente.
+ 
+4. **Datos:** Mejorar la calidad del reporte de datos en la EVA, ya que se detectaron registros con valores inconsistentes que dificultan el analisis.
+ 
+---
+[NOTA: Este es un reporte de demostracion. Configura GROQ_API_KEY en .env para generar reportes reales con Llama 3.3 70B (gratis).]
