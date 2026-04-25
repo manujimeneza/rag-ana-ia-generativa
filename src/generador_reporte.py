@@ -1,18 +1,21 @@
 """
 Módulo Generador de Reporte - Manuela
 Llama a un LLM para generar el reporte narrativo.
-Soporta dos proveedores:
-  - Groq (GRATIS, usa Llama 3.3 70B) ← RECOMENDADO
+Soporta múltiples proveedores:
+  - Groq (GRATIS) - 3 modelos diferentes para comparación
   - Claude/Anthropic (de pago)
- 
+  - OpenAI-compatible (de pago)
+
 Representa el paso de GENERATION en la arquitectura RAG.
 Genera reporte en HTML y lo abre automáticamente en el navegador.
 """
- 
+
 import os
 import webbrowser
 import re
+import time
 from datetime import datetime
+from typing import Dict, List
  
 try:
     from dotenv import load_dotenv
@@ -118,19 +121,19 @@ def _llamar_openai_compatible(system_prompt: str, user_prompt: str) -> str:
         from openai import OpenAI
     except ImportError:
         return None
- 
+
     api_key = os.environ.get("OPENAI_API_KEY")
     base_url = os.environ.get("OPENAI_BASE_URL")
     model = os.environ.get("OPENAI_MODEL", "gpt-3.5-turbo")
- 
+
     if not api_key:
         return None
- 
+
     client = OpenAI(api_key=api_key, base_url=base_url) if base_url else OpenAI(api_key=api_key)
- 
+
     print(f"[GENERATION] Proveedor: OpenAI-compatible ({base_url or 'api.openai.com'})")
     print(f"[GENERATION] Modelo: {model}")
- 
+
     response = client.chat.completions.create(
         model=model,
         messages=[
@@ -139,8 +142,170 @@ def _llamar_openai_compatible(system_prompt: str, user_prompt: str) -> str:
         ],
         max_tokens=1500,
     )
- 
+
     return response.choices[0].message.content
+
+
+# ══════════════════════════════════════════════════════════════════════
+# MULTI-MODELO GROQ - COMPARACIÓN DE 3 MODELOS
+# ══════════════════════════════════════════════════════════════════════
+
+# Configuración de modelos para comparación
+# Modelos disponibles actualmente en Groq (verificado 2026-04-24)
+# Criterios: Económicos, Production-grade, generativos para reportes narrativos
+MODELOS_GROQ = {
+    "llama-3.1-8b-instant": {
+        "id": "llama-3.1-8b-instant",
+        "nombre": "Llama 3.1 8B Instant",
+        "rol": "Modelo ligero - 560 T/s, $0.05/$0.08 por token (MÁS ECONÓMICO)"
+    },
+    "openai/gpt-oss-20b": {
+        "id": "openai/gpt-oss-20b",
+        "nombre": "GPT-OSS 20B",
+        "rol": "Modelo medio - 1000 T/s, $0.075/$0.30 por token (MÁS RÁPIDO)"
+    },
+    "llama-3.3-70b-versatile": {
+        "id": "llama-3.3-70b-versatile",
+        "nombre": "Llama 3.3 70B Versatile",
+        "rol": "Modelo potente - 280 T/s, $0.59/$0.79 por token (MEJOR CALIDAD)"
+    }
+}
+
+
+def _llamar_groq_modelo(system_prompt: str, user_prompt: str, modelo_id: str) -> Dict[str, any]:
+    """
+    Llama a Groq con un modelo específico (permitiendo comparación de múltiples modelos).
+
+    Args:
+        system_prompt: Instrucciones del sistema
+        user_prompt: Prompt del usuario
+        modelo_id: ID del modelo Groq (ej: 'llama-3.3-70b-versatile')
+
+    Returns:
+        Dict con: {"reporte": str, "tokens": int, "tiempo_ms": int, "modelo": str, "error": str|None}
+    """
+    try:
+        from groq import Groq
+    except ImportError:
+        print("[GENERATION] Instalando SDK de Groq...")
+        os.system("pip install groq --quiet")
+        from groq import Groq
+
+    api_key = os.environ.get("GROQ_API_KEY")
+
+    if not api_key or not api_key.startswith("gsk_"):
+        return {
+            "reporte": None,
+            "tokens": 0,
+            "tiempo_ms": 0,
+            "modelo": modelo_id,
+            "error": "GROQ_API_KEY no configurada"
+        }
+
+    try:
+        tiempo_inicio = time.time()
+
+        cliente = Groq(api_key=api_key)
+
+        info_modelo = MODELOS_GROQ.get(modelo_id, {})
+        nombre_modelo = info_modelo.get("nombre", modelo_id)
+
+        print(f"[GENERATION] Llamando Groq: {nombre_modelo}")
+
+        completion = cliente.chat.completions.create(
+            model=modelo_id,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.6,
+            max_tokens=2000,
+            top_p=1,
+            stream=False,
+        )
+
+        tiempo_transcurrido = int((time.time() - tiempo_inicio) * 1000)  # ms
+        reporte = completion.choices[0].message.content
+        tokens = completion.usage.total_tokens
+
+        print(f"[GENERATION] ✅ {nombre_modelo}: {tokens} tokens en {tiempo_transcurrido}ms")
+
+        return {
+            "reporte": reporte,
+            "tokens": tokens,
+            "tiempo_ms": tiempo_transcurrido,
+            "modelo": modelo_id,
+            "error": None
+        }
+
+    except Exception as e:
+        print(f"[GENERATION] ❌ Error con {modelo_id}: {e}")
+        return {
+            "reporte": None,
+            "tokens": 0,
+            "tiempo_ms": 0,
+            "modelo": modelo_id,
+            "error": str(e)
+        }
+
+
+def generar_reportes_comparacion(
+    system_prompt: str = None,
+    user_prompt: str = None,
+    resumen_analisis: dict = None,
+    contexto_dominio: str = None
+) -> Dict[str, Dict]:
+    """
+    Genera reportes con 3 modelos Groq diferentes para comparación.
+    Ejecuta secuencialmente para evitar rate limits.
+
+    NUEVO: Puede recibir resumen y contexto para generar prompts optimizados por modelo.
+
+    Args:
+        system_prompt: Instrucciones del sistema (si None, genera desde resumen+contexto)
+        user_prompt: Prompt del usuario (si None, genera desde resumen+contexto)
+        resumen_analisis: Dict con métricas (necesario si no hay prompts)
+        contexto_dominio: String con contexto (necesario si no hay prompts)
+
+    Returns:
+        Dict con estructura:
+        {
+            "gpt-oss-120b": {"reporte": str, "tokens": int, "tiempo_ms": int, ...},
+            "llama-3.3-70b-versatile": {...},
+            "qwen-qwen3-32b": {...}
+        }
+    """
+    print("\n[GENERATION] ════════════════════════════════════════════════════")
+    print("[GENERATION] GENERANDO REPORTES COMPARATIVOS - 3 MODELOS GROQ")
+    print("[GENERATION] ℹ️  MISMO PROMPT para todos → Comparación justa")
+    print("[GENERATION] ════════════════════════════════════════════════════\n")
+
+    resultados = {}
+
+    for modelo_key, info_modelo in MODELOS_GROQ.items():
+        modelo_id = info_modelo["id"]
+        nombre = info_modelo["nombre"]
+        rol = info_modelo["rol"]
+
+        print(f"\n[GENERATION] ─────────────────────────────────────────────────")
+        print(f"[GENERATION] Modelo: {nombre}")
+        print(f"[GENERATION] Rol:    {rol}")
+        print(f"[GENERATION] ─────────────────────────────────────────────────")
+
+        # Usar EL MISMO prompt para todos los modelos
+        resultado = _llamar_groq_modelo(system_prompt, user_prompt, modelo_id)
+        resultados[modelo_key] = resultado
+
+        # Esperar un poco entre llamadas para evitar rate limiting
+        if modelo_key != list(MODELOS_GROQ.keys())[-1]:  # No esperar después del último
+            print(f"[GENERATION] Esperando 2 segundos antes del siguiente modelo...")
+            time.sleep(2)
+
+    print(f"\n[GENERATION] ════════════════════════════════════════════════════")
+    print("[GENERATION] ✅ COMPARACIÓN COMPLETADA - 3 reportes generados")
+    print(f"[GENERATION] ════════════════════════════════════════════════════\n")
+
+    return resultados
  
  
 # ══════════════════════════════════════════════════════════════════════
@@ -429,8 +594,153 @@ def guardar_reporte(reporte: str, nombre: str = None) -> str:
     return ruta
  
  
+def guardar_reporte_comparacion_html(reportes: Dict[str, Dict], resumen_analisis: dict = None) -> str:
+    """
+    Genera un HTML comparativo con los 3 reportes de diferentes modelos.
+
+    Args:
+        reportes: Dict con los resultados de cada modelo (output de generar_reportes_comparacion)
+        resumen_analisis: Dict con métricas del análisis
+
+    Returns:
+        Ruta al archivo HTML generado
+    """
+    if not reportes:
+        print("[GENERATION] ❌ Error: No hay reportes para generar comparación")
+        return None
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    nombre = f"reporte_comparacion_{timestamp}.html"
+    ruta = os.path.join(os.path.dirname(__file__), "..", "output", nombre)
+    os.makedirs(os.path.dirname(ruta), exist_ok=True)
+
+    fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    departamento = resumen_analisis.get("departamento", "N/A") if resumen_analisis else "N/A"
+
+    # Construir tabs con los 3 modelos
+    tabs_html = ""
+    contenido_tabs = ""
+
+    for i, (modelo_key, resultado) in enumerate(reportes.items()):
+        info = MODELOS_GROQ.get(modelo_key, {})
+        nombre_modelo = info.get("nombre", modelo_key)
+        rol = info.get("rol", "")
+
+        # Tab botón
+        activo = "activo" if i == 0 else ""
+        tabs_html += f"""
+        <button class="tab-btn {activo}" onclick="cambiarTab('{modelo_key}')">
+            <strong>{nombre_modelo}</strong>
+            <small>{rol}</small>
+        </button>"""
+
+        # Contenido del tab
+        if resultado.get("error"):
+            contenido = f"<div class='error'>❌ Error: {resultado['error']}</div>"
+        else:
+            reporte_html = _markdown_a_html(resultado.get("reporte", ""))
+            contenido = f"<div class='rc'>{reporte_html}</div>"
+
+        # Métricas
+        tokens = resultado.get("tokens", 0)
+        tiempo = resultado.get("tiempo_ms", 0)
+        metricas_html = f"""
+        <div class="metricas-modelo">
+            <span class="metrica">Tokens: <strong>{tokens}</strong></span>
+            <span class="metrica">Tiempo: <strong>{tiempo}ms</strong></span>
+        </div>"""
+
+        contenido_tabs += f"""
+        <div id="tab-{modelo_key}" class="tab-contenido {'mostrado' if i == 0 else ''}">
+            {metricas_html}
+            {contenido}
+        </div>"""
+
+    html = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Comparativo ANA - Evergreen</title>
+<style>
+*{{margin:0;padding:0;box-sizing:border-box}}
+body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0fdf4;color:#1a1a1a;line-height:1.6}}
+.hd{{background:linear-gradient(135deg,#166534,#15803d 50%,#22c55e);color:#fff;padding:40px 0;text-align:center}}
+.hd h1{{font-size:28px;font-weight:700;margin-bottom:6px}}
+.hd p{{font-size:14px;opacity:.85}}
+.hd .b{{display:inline-block;background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px;margin-top:8px}}
+.c{{max-width:1200px;margin:0 auto;padding:0 24px}}
+.se{{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}}
+.tt{{font-size:13px;font-weight:600;color:#166534;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #dcfce7}}
+.tabs{{display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid #e5e7eb;flex-wrap:wrap}}
+.tab-btn{{background:none;border:none;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s}}
+.tab-btn:hover{{color:#166534}}
+.tab-btn.activo{{color:#166534;border-bottom-color:#22c55e}}
+.tab-btn small{{display:block;font-size:11px;font-weight:400;color:#9ca3af;margin-top:2px}}
+.tab-contenido{{display:none}}
+.tab-contenido.mostrado{{display:block}}
+.metricas-modelo{{display:flex;gap:16px;margin-bottom:16px;padding:12px;background:#f9fafb;border-radius:8px;font-size:12px}}
+.metrica{{display:flex;align-items:center;gap:6px;color:#6b7280}}
+.rc h2{{font-size:18px;font-weight:700;color:#166534;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid #dcfce7}}
+.rc h2:first-child{{margin-top:0}}
+.rc h3{{font-size:15px;font-weight:600;color:#333;margin:16px 0 8px}}
+.rc p{{margin-bottom:10px;font-size:14px;color:#374151}}
+.rc ul{{margin:8px 0 16px 24px}}
+.rc li{{margin-bottom:6px;font-size:14px;color:#374151}}
+.rc strong{{color:#166534}}
+.rc hr{{border:none;border-top:1px dashed #d1d5db;margin:20px 0}}
+.error{{background:#fef2f2;border-left:4px solid #ef4444;padding:12px 16px;border-radius:0 8px 8px 0;color:#991b1b;font-size:13px}}
+.ft{{text-align:center;padding:32px 0;font-size:12px;color:#9ca3af}}
+.ft a{{color:#22c55e;text-decoration:none}}
+@media print{{body{{background:#fff}}.hd{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}.se{{box-shadow:none;border:1px solid #e5e7eb}}}}
+</style>
+<script>
+function cambiarTab(modeloKey) {{
+    // Ocultar todos los tabs
+    document.querySelectorAll('.tab-contenido').forEach(el => el.classList.remove('mostrado'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('activo'));
+
+    // Mostrar el tab seleccionado
+    document.getElementById('tab-' + modeloKey).classList.add('mostrado');
+    event.target.closest('.tab-btn').classList.add('activo');
+}}
+</script>
+</head>
+<body>
+<div class="hd"><div class="c">
+    <h1>Reporte Comparativo - 3 Modelos Groq</h1>
+    <p>Modulo de Analitica [ANA] — Evergreen</p>
+    <span class="b">Generado: {fecha}</span><br>
+    <span class="b">Departamento: {departamento}</span>
+</div></div>
+<div class="c">
+<div class="se">
+    <div class="tt">Reportes generados por 3 modelos Groq</div>
+    <div class="tabs">
+        {tabs_html}
+    </div>
+    {contenido_tabs}
+</div>
+<div class="ft">
+    <p>Proyecto universitario — Arquitectura y Desarrollo para IA Generativa</p>
+    <p>Equipo: Carolina &middot; Wilfer &middot; Manuela</p>
+</div>
+</div>
+</body></html>"""
+
+    with open(ruta, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print(f"[GENERATION] Reporte HTML comparativo guardado en: {ruta}")
+    return ruta
+
+
 def abrir_en_navegador(ruta: str):
     """Abre el reporte HTML en el navegador por defecto."""
+    if not ruta:
+        print("[GENERATION] ❌ No hay ruta para abrir en navegador")
+        return
+
     ruta_absoluta = os.path.abspath(ruta)
     print(f"[GENERATION] Abriendo reporte en el navegador...")
     webbrowser.open(f"file://{ruta_absoluta}")
