@@ -3,3 +3,5 @@ src/.env
 output/
 data/*.csv
 __pycache__/
+.env.*
+.env.example
